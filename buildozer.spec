@@ -26,7 +26,7 @@ android.permissions = INTERNET,ACCESS_NETWORK_STATE
 android.api         = 33
 android.minapi      = 21
 android.ndk         = 25b
-android.sdk         = 33
+# android.sdk is deprecated in newer buildozer — android.api controls the target SDK
 
 # ── Icons & splash ──────────────────────────────────────────────────────────
 # Place your 512×512 icon as apk/icon.png to override the default
