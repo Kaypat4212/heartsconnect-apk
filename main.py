@@ -41,7 +41,23 @@ def _build_android_webview():
     class _Container(Widget):
         def __init__(self, **kwargs):
             super().__init__(**kwargs)
+            from kivy.core.window import Window
+            Window.bind(on_keyboard=self._on_keyboard)
             Clock.schedule_once(self._init_webview)
+
+        def _on_keyboard(self, window, key, scancode, codepoint, modifier):
+            if key == 27:  # Android hardware back button
+                self._do_back()
+                return True  # consume event
+            return False
+
+        @run_on_ui_thread
+        def _do_back(self):
+            if hasattr(self, "_wv") and self._wv.canGoBack():
+                self._wv.goBack()
+            else:
+                # No WebView history — minimize instead of exiting
+                activity.moveTaskToBack(True)
 
         @run_on_ui_thread
         def _init_webview(self, *args):
