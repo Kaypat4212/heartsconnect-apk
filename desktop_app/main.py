@@ -53,16 +53,77 @@ p  { font-size:13px; color:rgba(255,255,255,.45); margin-bottom:44px; }
   <div class="spinner"></div>
 </body></html>"""
 
-# ── Keyboard shortcuts injected after each page load ─────────────────────────
+# ── UI overlay + keyboard shortcuts injected after each page load ────────────
 KEYBOARD_JS = """
 (function(){
   if (window.__hc_kb) return;
   window.__hc_kb = true;
+
+  /* ── keyboard shortcuts ── */
   document.addEventListener('keydown', function(e){
     if (e.key === 'F5')                     { e.preventDefault(); location.reload(); }
     if (e.altKey && e.key === 'ArrowLeft')  { e.preventDefault(); history.back(); }
     if (e.altKey && e.key === 'ArrowRight') { e.preventDefault(); history.forward(); }
   });
+
+  /* ── floating refresh button ── */
+  var style = document.createElement('style');
+  style.textContent = `
+    #hc-refresh-btn {
+      position: fixed;
+      bottom: 22px;
+      right: 22px;
+      z-index: 2147483647;
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #e91e63, #880e4f);
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 18px rgba(233,30,99,.45);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform .15s, box-shadow .15s, opacity .15s;
+      opacity: .85;
+    }
+    #hc-refresh-btn:hover {
+      opacity: 1;
+      transform: scale(1.1);
+      box-shadow: 0 6px 24px rgba(233,30,99,.65);
+    }
+    #hc-refresh-btn:active { transform: scale(.96); }
+    #hc-refresh-btn svg {
+      width: 22px; height: 22px; fill: none;
+      stroke: #fff; stroke-width: 2.4;
+      stroke-linecap: round; stroke-linejoin: round;
+      transition: transform .4s;
+    }
+    #hc-refresh-btn.spinning svg {
+      animation: hc-spin .6s linear infinite;
+    }
+    @keyframes hc-spin { to { transform: rotate(360deg); } }
+  `;
+  document.head.appendChild(style);
+
+  var btn = document.createElement('button');
+  btn.id = 'hc-refresh-btn';
+  btn.title = 'Refresh (F5)';
+  btn.innerHTML = `<svg viewBox="0 0 24 24">
+    <path d="M3 12a9 9 0 1 0 9-9 9 9 0 0 0-6.36 2.64L3 8"/>
+    <polyline points="3 3 3 8 8 8"/>
+  </svg>`;
+
+  btn.addEventListener('click', function(){
+    btn.classList.add('spinning');
+    location.reload();
+  });
+
+  window.addEventListener('beforeunload', function(){
+    btn.classList.add('spinning');
+  });
+
+  document.body.appendChild(btn);
 })();
 """
 
