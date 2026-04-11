@@ -29,8 +29,8 @@ android.ndk         = 25b
 # android.sdk is deprecated in newer buildozer — android.api controls the target SDK
 
 # ── Icons & splash ──────────────────────────────────────────────────────────
-# Place your 512×512 icon as apk/icon.png to override the default
-# icon.filename     = %(source.dir)s/icon.png
+# Place your 512×512 icon as icon.png in the project root
+icon.filename     = %(source.dir)s/icon.png
 # presplash.filename = %(source.dir)s/splash.png
 # presplash.color = #e91e63
 
