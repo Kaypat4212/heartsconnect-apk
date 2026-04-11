@@ -5,6 +5,7 @@ Built with Python / KivyMD / Buildozer.
 """
 from kivy.app import App
 from kivy.uix.widget import Widget
+from kivy.uix.label import Label
 from kivy.clock import Clock
 
 APP_URL = "https://heartsconnect.cc"
@@ -12,16 +13,19 @@ APP_URL = "https://heartsconnect.cc"
 
 class HeartsConnectApp(App):
     def build(self):
-        # Use Android WebView via pyjnius on device,
-        # or a WebBrowser fallback on desktop for testing.
         try:
-            from android.webview import WebView as AndroidWebView  # noqa: F401
+            # 'android' package is only available inside a p4a/Android build
+            import android  # noqa: F401
             return _build_android_webview()
         except ImportError:
             # Desktop fallback: open URL in system browser
             import webbrowser
             webbrowser.open(APP_URL)
-            return Widget()  # blank canvas (app exits after opening browser)
+            return Label(
+                text=f"Opening in browser:\n{APP_URL}",
+                halign="center",
+                font_size="16sp",
+            )
 
 
 def _build_android_webview():
